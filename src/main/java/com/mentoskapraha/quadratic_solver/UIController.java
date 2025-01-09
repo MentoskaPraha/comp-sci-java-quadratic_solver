@@ -3,9 +3,6 @@ package com.mentoskapraha.quadratic_solver;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
-
-import java.text.ParsePosition;
 
 public class UIController {
 

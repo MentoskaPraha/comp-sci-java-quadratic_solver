@@ -23,7 +23,7 @@ public class DecimalTextFormatter extends TextFormatter<Number> {
   }
 
   private static StringConverter<Number> getStringConverter(int minDecimals, int maxDecimals) {
-    return new StringConverter<Number>() {
+    return new StringConverter<>() {
       @Override
       public String toString(Number object) {
         if (object == null) {
@@ -39,8 +39,7 @@ public class DecimalTextFormatter extends TextFormatter<Number> {
         }
         format = format + ";-" + format;
         DecimalFormat df = new DecimalFormat(format);
-        String formatted = df.format(object);
-        return formatted;
+        return df.format(object);
       }
 
       @Override
@@ -59,51 +58,48 @@ public class DecimalTextFormatter extends TextFormatter<Number> {
 
   private static UnaryOperator<javafx.scene.control.TextFormatter.Change> getUnaryOperator(int maxDecimals,
                                                                                            boolean allowsNegative, int noOfDigitsBeforeDecimal) {
-    return new UnaryOperator<TextFormatter.Change>() {
-      @Override
-      public TextFormatter.Change apply(TextFormatter.Change change) {
-        if (!allowsNegative && change.getControlNewText().startsWith("-")) {
-          return null;
-        }
+    return change -> {
+      if (!allowsNegative && change.getControlNewText().startsWith("-")) {
+        return null;
+      }
 
-        if (change.getControlNewText().isEmpty()) {
+      if (change.getControlNewText().isEmpty()) {
+        return change;
+      }
+
+      ParsePosition parsePosition = new ParsePosition(0);
+      Object object = format.parse(change.getControlNewText(), parsePosition);
+
+      if (change.getCaretPosition() == 1) {
+        if (change.getControlNewText().equals(".")) {
           return change;
         }
+      }
 
-        ParsePosition parsePosition = new ParsePosition(0);
-        Object object = format.parse(change.getControlNewText(), parsePosition);
+      if (object == null || parsePosition.getIndex() < change.getControlNewText().length()) {
+        return null;
+      } else {
 
-        if (change.getCaretPosition() == 1) {
-          if (change.getControlNewText().equals(".")) {
-            return change;
+        if(noOfDigitsBeforeDecimal != -1)
+        {
+          int signum = new BigDecimal(change.getControlNewText()).signum();
+          int precision = new BigDecimal(change.getControlNewText()).precision();
+          int scale = new BigDecimal(change.getControlNewText()).scale();
+
+          int val = signum == 0 ? 1 : precision - scale;
+          if (val > noOfDigitsBeforeDecimal) {
+            return null;
           }
         }
 
-        if (object == null || parsePosition.getIndex() < change.getControlNewText().length()) {
-          return null;
-        } else {
-
-          if(noOfDigitsBeforeDecimal != -1)
-          {
-            int signum = new BigDecimal(change.getControlNewText()).signum();
-            int precision = new BigDecimal(change.getControlNewText()).precision();
-            int scale = new BigDecimal(change.getControlNewText()).scale();
-
-            int val = signum == 0 ? 1 : precision - scale;
-            if (val > noOfDigitsBeforeDecimal) {
-              return null;
-            }
+        int decPos = change.getControlNewText().indexOf(".");
+        if (decPos > 0) {
+          int numberOfDecimals = change.getControlNewText().substring(decPos + 1).length();
+          if (numberOfDecimals > maxDecimals) {
+            return null;
           }
-
-          int decPos = change.getControlNewText().indexOf(".");
-          if (decPos > 0) {
-            int numberOfDecimals = change.getControlNewText().substring(decPos + 1).length();
-            if (numberOfDecimals > maxDecimals) {
-              return null;
-            }
-          }
-          return change;
         }
+        return change;
       }
     };
   }
