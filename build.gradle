@@ -17,10 +17,7 @@ ext {
     junitVersion = '5.10.2'
 }
 
-sourceCompatibility = '17'
-targetCompatibility = '17'
-
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
@@ -37,17 +34,15 @@ javafx {
 dependencies {
     implementation('org.controlsfx:controlsfx:11.2.1')
     implementation('org.kordamp.bootstrapfx:bootstrapfx-core:0.4.0')
-
-    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 }
 
-test {
-    useJUnitPlatform()
+compileJava {
+    sourceCompatibility = '17'
+    targetCompatibility = '17'
 }
 
 jlink {
-    imageZip = project.file("${buildDir}/distributions/app-${javafx.platform.classifier}.zip")
+    imageZip = project.file("${layout.buildDirectory}/distributions/app-${javafx.platform.classifier}.zip")
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
     launcher {
         name = 'app'

@@ -1,16 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-
 <?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.mentoskapraha.quadratic_solver.UIController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
+<GridPane
+        xmlns:fx="http://javafx.com/fxml"
+        alignment="CENTER"
+        hgap="10"
+        vgap="10"
+        style="-fx-padding: 20;"
+        fx:controller="com.mentoskapraha.quadratic_solver.UIController"
+>
+    <!-- Title -->
+    <Label text="Quadratic Equation Solver" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2"
+           style="-fx-font-weight: bold; -fx-font-size: 20px;" />
+
+    <!-- Instructions -->
+    <Label text="Input the coefficients of a quadratic equation in the format below, then click the Calculate button." GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2"
+           style="-fx-font-size: 12px; -fx-text-fill: grey;" />
+
+    <!-- Equation Format -->
+    <HBox GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2" alignment="CENTER">
+        <Label text="a₂x² + a₁x + a₀ = 0" style="-fx-font-size: 12px; -fx-text-fill: grey;" />
+    </HBox>
+
+    <!-- Input Fields -->
+    <Label text="a₂ =" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+    <TextField fx:id="a2" GridPane.columnIndex="1" GridPane.rowIndex="3" prefWidth="200" />
+
+    <Label text="a₁ =" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+    <TextField fx:id="a1" GridPane.columnIndex="1" GridPane.rowIndex="4" prefWidth="200" />
+
+    <Label text="a₀ =" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+    <TextField fx:id="a0" GridPane.columnIndex="1" GridPane.rowIndex="5" prefWidth="200" />
+
+    <!-- Calculate Button -->
+    <HBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.columnSpan="2" alignment="CENTER_RIGHT">
+        <Button text="Calculate" onAction="#onCalculateButtonClick" />
+    </HBox>
+
+    <!-- Results -->
+    <HBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.columnSpan="2">
+        <Label text="x is: " style="-fx-font-size: 14px;"/>
+        <Label fx:id="result1" text="N/A" style="-fx-font-size: 14px;" />
+        <Label text="or" style="-fx-font-size: 14px;"/>
+        <Label fx:id="result2" text="N/A" style="-fx-font-size: 14px;" />
+    </HBox>
+</GridPane>
